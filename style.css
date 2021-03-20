@@ -1,0 +1,109 @@
+html {
+  font-size: 14px;
+}
+body {
+  background-color: #f0f0f0;
+  font-family: "Open Sans", sans-serif;
+}
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-5%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  html {
+    font-size: 16px;
+  }
+}
+@media (min-width: 700px) and (max-width: 1024px) {
+}
+@media (min-width: 1024px) and (max-width: 1440px) {
+}
+@media (min-width: 1440px) {
+}
+.rounded-circle {
+  border: 6px solid #7a7a7a;
+  height: 150px;
+  width: 150px;
+}
+.rounded-circle:hover {
+  opacity: 0.7;
+}
+.whitebg {
+  background: #fff;
+  padding: 17px;
+  border-radius: 5px;
+}
+
+.users-icon {
+  padding: 10px 20px 10px 10px;
+  text-align: right;
+}
+.fa-users {
+  font-size: 130px;
+  color: #bddc04;
+}
+.container {
+  max-width: 1024px;
+}
+.okbutton {
+  background-color: #c5e09b;
+  color: #000;
+  margin: 3px 3px;
+  padding: 2px 9px;
+  font-size: 12px;
+}
+.okbutton:hover {
+  background-color: #7cba01;
+}
+.okbuttonactive {
+  background-color: #7cba01;
+}
+.btnsdiv {
+  padding: 10px 5px;
+  text-align: center;
+}
+.itemheading {
+  color: #1515a2;
+  font-weight: 900;
+  font-size: 13px;
+}
+.itemdetails {
+  font-weight: 700;
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+.itemdetails span {
+  font-size: 12px;
+  color: #b7b7b7;
+}
+.missonimg {
+  width: 100%;
+  background: #eee;
+  padding: 5px;
+}
+.headingunderline {
+  border-bottom: 1px solid #ccc;
+  margin: 0px 8px;
+  font-size: 12px;
+  color: indigo;
+  font-weight: 600;
+}
+.card-deck .card {
+  min-width: 220px;
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+}

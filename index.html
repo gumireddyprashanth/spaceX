@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>SpaceX Launch Programs</title>
+  <!-- Bootstrap core CSS / Font-Awesome / Google-fonts-->
+  <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600&display=swap"
+    rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container pt-2">
+    <h4 class="mb-0"><b>SpaceX Launch Programs</b></h4>
+    <section class="row mb-4">
+      <div class="col-lg-2 col-md-3 col-sm-12 p-2">
+        <div class="whitebg">
+          <h6><b>Filters</b></h6>
+          <p class="text-center mb-0 headingunderline">Launch Year</p>
+          <div id="filteredyearsdiv" class="btnsdiv">
+          </div>
+          <h6><b>Filters</b></h6>
+          <p class="text-center mb-0 headingunderline">Succesful Launch</p>
+          <div id="slaunchbtns" class="btnsdiv">
+            <button id="sltrue" type="button" class="btn btn-md okbutton">True</button>
+            <button id="slfalse" type="button" class="btn btn-md okbutton">False</button>
+          </div>
+          <h6><b>Filters</b></h6>
+          <p class="text-center mb-0 headingunderline">Succesful Landing</p>
+          <div id="slandingbtns" class="btnsdiv">
+            <button id="slandtrue" type="button" class="btn btn-md okbutton">True</button>
+            <button id="slandfalse" type="button" class="btn btn-md okbutton">False</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-10 col-md-9 col-sm-12">
+        <section id="resultsdiv" class="row mb-4">
+        </section>
+      </div>
+    </section>
+    <p class="text-center"><b>Developed by : Prashanth BR (9845746365)</b>
+      </>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script>
+    //Load data on page load
+    function onloadDocument() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var res = this.responseText;
+          onResponse(JSON.parse(res));
+        }
+      };
+      xhttp.open("GET", "https://api.spaceXdata.com/v3/launches?limit=100", true);
+      xhttp.send();
+    };
+    onloadDocument();
+
+    function onResponse(response) {
+      renderYears(response);
+      renderResults(response);
+    }
+
+    //Render Years HTML using the responce
+    renderYears = (response) => {
+      let years = []
+      for (let [key, value] of Object.entries(response)) {
+        years.push(value.launch_year);
+      }
+      let filteredyears = years.filter(function (item, index, inputArray) {
+        return inputArray.indexOf(item) == index
+      });
+      var yearshtml = '';
+      filteredyears.forEach(function (i) {
+        yearshtml += '<button type="button" class="btn btn-md okbutton">' + i + '</button>';
+      })
+      document.getElementById('filteredyearsdiv').innerHTML = yearshtml
+    }
+    //Loading Results Using Filter
+    loadResultsUsingFilter = (year, slaunch, slanding) => {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var res = this.responseText;
+          renderResults(JSON.parse(res));
+        }
+      };
+      xhttp.open("GET", "https://api.spaceXdata.com/v3/launches?limit=100&launch_success=" + slaunch + "&land_success=" + slanding + "&launch_year=" + year + "", true);
+      xhttp.send();
+    };
+
+    //Filters for Year
+    $(document).on('click', '#filteredyearsdiv button', function () {
+      let year = $(this).text().toLowerCase();
+      $('#filteredyearsdiv button').removeClass('okbuttonactive');
+      $(this).addClass('okbuttonactive');
+      let slaunch = $('#slaunchbtns .okbuttonactive').text().toLowerCase();
+      let slanding = $('#slandingbtns .okbuttonactive').text().toLowerCase();
+      loadResultsUsingFilter(year, slaunch, slanding)
+    })
+    //Filters for Successful launch
+    $(document).on('click', '#slaunchbtns button', function () {
+      let condition = $(this).text().toLowerCase();
+      $('#slaunchbtns button').removeClass('okbuttonactive');
+      $(this).addClass('okbuttonactive');
+      let year = $('#filteredyearsdiv .okbuttonactive').text().toLowerCase();
+      let slanding = $('#slandingbtns .okbuttonactive').text().toLowerCase();
+      loadResultsUsingFilter(year, condition, slanding)
+    })
+    //Filters for Successful landing
+    $(document).on('click', '#slandingbtns button', function () {
+      let condition = $(this).text().toLowerCase();
+      $('#slandingbtns button').removeClass('okbuttonactive');
+      $(this).addClass('okbuttonactive');
+      let year = $('#filteredyearsdiv .okbuttonactive').text().toLowerCase();
+      let slaunch = $('#slaunchbtns .okbuttonactive').text().toLowerCase();
+      loadResultsUsingFilter(year, slaunch, condition)
+    })
+
+    //Render Results HTML using the responce
+    renderResults = (response) => {
+      let resultsarray = [];
+      for (let [key, value] of Object.entries(response)) {
+        var resultsdataarray = {
+          'missionname': value.mission_name,
+          'flightnumber': value.flight_number,
+          'missionid': '{mission_id}',
+          'launchyear': value.launch_year,
+          'successfullaunch': value.launch_success,
+          'successlanding': '{launch_landing}',
+          'missionimage': value.links.mission_patch_small
+        }
+        resultsarray.push(resultsdataarray);
+      }
+
+      var resultshtml = '';
+      resultsarray.forEach(function (i) {
+        resultshtml += '<div class="col-lg-3 col-md-6 col-sm-12 p-2"><div class="whitebg">' +
+          '<div class="text-center"><img class="missonimg" src="' + i.missionimage + '"></div>' +
+          '<h6 class="my-2 itemheading">' + i.missionname + '<span>' + i.flightnumber + '</span></h6>' +
+          '<p class="itemdetails">Misson Ids : <span>' + i.missionid + '</span></p>' +
+          '<p class="itemdetails">Launch Year : <span>' + i.launchyear + '</span></p>' +
+          '<p class="itemdetails">Succesful Launch : <span>' + i.successfullaunch + '</span></p>' +
+          '<p class="itemdetails">Succesful landing : <span>' + i.successlanding + '</span></p>' +
+          '</div></div>'
+      })
+      document.getElementById('resultsdiv').innerHTML = resultshtml;
+    }
+  </script>
+</body>
+
+</html>
